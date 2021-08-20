@@ -1,7 +1,7 @@
 package com.errorgon.pressure;
 
-import com.errorgon.pressure.coefficients.IncidentOverpressure;
-import com.errorgon.pressure.enums.ExplosivesType;
+import com.errorgon.pressure.coefficients.IncidentPressure;
+import com.errorgon.pressure.coefficients.ReflectedPressure;
 import com.errorgon.pressure.enums.MunitionType;
 import com.errorgon.pressure.enums.PES;
 import com.errorgon.pressure.enums.Units;
@@ -59,18 +59,20 @@ public class Pressure {
     public void setExplosive(Explosive explosive) { this.explosive = explosive; }
     public Explosive getExplosive() { return explosive; }
 
+    // Equation 2-3
     // Z = R/W^(1/3)
     private double getScaledDistance(double distance) {
         return (distance / Math.pow(netExplosiveWeight, (1.0 / 3.0)));
     }
 
-    public double getIncidentOverpressure(double scaledDistance) {
-        IncidentOverpressure op = new IncidentOverpressure(Units.ENGLISH, scaledDistance);
-        return  StandardEquation.calculate(op.A, op.B, op.C, op.D, op.E, op.F, op.G, scaledDistance);
+
+    public double getIncidenPressure() {
+        IncidentPressure op = new IncidentPressure(units, scaledDistance);
+        return StandardEquation.calculate(op.A, op.B, op.C, op.D, op.E, op.F, op.G, scaledDistance);
     }
 
-    public double getIncidentOverpressure() {
-        IncidentOverpressure op = new IncidentOverpressure(units, scaledDistance);
+    public double getReflectedPressure() {
+        ReflectedPressure op = new ReflectedPressure(units, scaledDistance);
         return StandardEquation.calculate(op.A, op.B, op.C, op.D, op.E, op.F, op.G, scaledDistance);
     }
 

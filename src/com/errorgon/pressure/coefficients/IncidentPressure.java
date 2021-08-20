@@ -3,7 +3,8 @@ package com.errorgon.pressure.coefficients;
 import com.errorgon.pressure.enums.Units;
 import com.errorgon.pressure.exceptions.OutOfRangeException;
 
-public class IncidentOverpressure {
+// Table 2-4
+public class IncidentPressure {
 
     public double A = 0;
     public double B = 0;
@@ -13,7 +14,7 @@ public class IncidentOverpressure {
     public double F = 0;
     public double G = 0;
 
-    public IncidentOverpressure(Units units, double scaledDistance) {
+    public IncidentPressure(Units units, double scaledDistance) {
         if (units.equals(Units.ENGLISH)) {
             setEnglishCoefficients(scaledDistance);
         } else if (units.equals(Units.METRIC)) {
