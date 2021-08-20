@@ -1,5 +1,6 @@
 package com.errorgon.pressure;
 
+import com.errorgon.pressure.enums.AtmosphericScalingBasis;
 import com.errorgon.pressure.enums.PES;
 import com.errorgon.pressure.enums.Units;
 import com.errorgon.pressure.explosives.Explosive;
@@ -11,14 +12,20 @@ import org.junit.jupiter.api.Test;
 class PressureTest {
 
     @Test
-    public void incidentOverpressurePSITest() {
+    public void atmosphereParameterTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new TNT(), 100, 75, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        pressure.printOutputSection();
+    }
+
+    @Test
+    public void incidentPressurePSITest() {
         Pressure pressure = new Pressure(100, 100);
-        double result = pressure.getIncidenPressure();
+        double result = pressure.getIncidentPressure();
         Assertions.assertEquals(2.6912489, result, 1e-6);
     }
 
     @Test
-    public void reflectedOverpressurePSITest() {
+    public void reflectedPressurePSITest() {
         Pressure pressure = new Pressure(200, 100);
         double result = pressure.getReflectedPressure();
         Assertions.assertEquals(8.35734, result, 1e-2);

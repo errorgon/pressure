@@ -7,7 +7,6 @@ import com.errorgon.pressure.exceptions.OutOfRangeException;
 // Table 2-5
 public class ReflectedPressure {
 
-
     public double A = 0;
     public double B = 0;
     public double C = 0;
