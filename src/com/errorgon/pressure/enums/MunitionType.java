@@ -1,5 +1,5 @@
 package com.errorgon.pressure.enums;
 
 public enum MunitionType {
-    BULK, LIGHT_CASED;
+    BULK_LIGHT_CASED;
 }

@@ -1,13 +1,12 @@
 package com.errorgon.pressure.explosives;
 
-
 import com.errorgon.pressure.enums.PES;
 
-public class TNT implements Explosive{
+public class Tritonal implements Explosive{
 
     private static final double density = 0.0588919;
-    private static final double equivPressure = 1.0;
-    private static final double equivImpulse = 1.0;
+    double equivPressure = 1.07;
+    double equivImpulse = 0.96;
 
     @Override
     public double getDensity() {
@@ -46,5 +45,4 @@ public class TNT implements Explosive{
     public Double[] pressureRange() {
         return null;
     }
-
 }
