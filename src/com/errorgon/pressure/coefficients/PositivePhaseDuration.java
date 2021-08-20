@@ -4,26 +4,32 @@ import com.errorgon.pressure.enums.Units;
 import com.errorgon.pressure.exceptions.OutOfRangeException;
 
 // Table 2-6
-public class PositivatePhaseDuration {
+// Used to calculate Positive Phase DUration
+public class PositivePhaseDuration {
 
-    public double A = 0;
-    public double B = 0;
-    public double C = 0;
-    public double D = 0;
-    public double E = 0;
-    public double F = 0;
-    public double G = 0;
+    private static double A = 0;
+    private static double B = 0;
+    private static double C = 0;
+    private static double D = 0;
+    private static double E = 0;
+    private static double F = 0;
+    private static double G = 0;
 
-    public PositivatePhaseDuration(Units units, double scaledDistance) {
+    public static double [] getCoefficients(Units units, double scaledDistance) {
         if (units.equals(Units.ENGLISH)) {
             setEnglishCoefficients(scaledDistance);
         } else if (units.equals(Units.METRIC)) {
             setMetricCoefficients(scaledDistance);
         }
+
+        return new double[]{A, B, C, D, E, F, G};
+    }
+
+    private PositivePhaseDuration() {
     }
 
 
-    private void setMetricCoefficients(double scaledDistance) {
+    private static void setMetricCoefficients(double scaledDistance) {
         if (scaledDistance < 0.2) {
             throw new OutOfRangeException();
         } else if (scaledDistance < 1.02) {
@@ -64,7 +70,7 @@ public class PositivatePhaseDuration {
 
     }
 
-    private void setEnglishCoefficients(double scaledDistance) {
+    private static void setEnglishCoefficients(double scaledDistance) {
         if (scaledDistance < 0.5) {
             throw new OutOfRangeException();
         } else if (scaledDistance < 2.5) {

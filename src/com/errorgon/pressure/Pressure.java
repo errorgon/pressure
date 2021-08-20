@@ -1,7 +1,6 @@
 package com.errorgon.pressure;
 
-import com.errorgon.pressure.coefficients.IncidentPressure;
-import com.errorgon.pressure.coefficients.ReflectedPressure;
+import com.errorgon.pressure.coefficients.*;
 import com.errorgon.pressure.enums.AtmosphericScalingBasis;
 import com.errorgon.pressure.enums.MunitionType;
 import com.errorgon.pressure.enums.PES;
@@ -52,19 +51,21 @@ public class Pressure {
     }
 
     public Pressure(Units units, Explosive explosive, double netExplosiveWeight, double distance) {
-        this(units, explosive, netExplosiveWeight, distance, 59.0, AtmosphericScalingBasis.ALTITUDE, 0.0);
+        this(units, explosive, netExplosiveWeight, distance, PES.OPEN_STORAGE_STANDARD, 59.0, AtmosphericScalingBasis.ALTITUDE, 0.0);
     }
 
-    public Pressure(Units units, Explosive explosive, double netExplosiveWeight, double distance, double temperature, AtmosphericScalingBasis asb, double atmosphere) {
+    public Pressure(Units units, Explosive explosive, double netExplosiveWeight, double distance, PES pes, double temperature, AtmosphericScalingBasis asb, double atmosphere) {
         this.units = units;
         this.explosive = explosive;
         this.netExplosiveWeight = netExplosiveWeight;
         this.distance = distance;
+        this.pes = pes;
         setScaledDistance(distance);
         this.temperature = temperature;
         this.asb = asb;
         this.atmosphere = atmosphere;
         setAltitudeParameters(asb, atmosphere);
+        setExplosiveParameters();
 
     }
 
@@ -82,6 +83,16 @@ public class Pressure {
     // Z = R/W^(1/3)
     private void setScaledDistance(double distance) {
         this.scaledDistance = (distance / Math.pow(netExplosiveWeight, (1.0 / 3.0)));
+    }
+
+    private double getHemiWeightPressure() {
+
+        return 0.0;
+    }
+
+    private double getHemiWeightImpulse() {
+
+        return 0.0;
     }
 
     private void setAltitudeParameters(AtmosphericScalingBasis asb, double value) {
@@ -106,8 +117,17 @@ public class Pressure {
         atmoImpulseFactor = Math.pow((atmoPressure / ATMO),(2.0 / 3.0))  * Math.pow((288.16 / temperatureKelvin), 0.5);
     }
 
+    private void setExplosiveParameters() {
+
+    }
+
 
     void printOutputSection() {
+        System.out.println("Tnt Eq - Pressure: " + explosive.getTNTPressureEquivalent(pes, netExplosiveWeight));
+        System.out.println("Tnt Eq - Impulse: " + explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight));
+        System.out.println("Hemi Weight Pressure: " + getHemiWeightPressure());
+        System.out.println("Hemi Weight Impulse: " + getHemiWeightImpulse());
+
         System.out.println("atmoPressure: " + atmoPressure);
         System.out.println("atmoPressureFactor: " + atmoPressureFactor);
         System.out.println("atmoDistanceFactor: " + atmoDistanceFactor);
@@ -118,13 +138,31 @@ public class Pressure {
 
     /***** Coefficient Methods *****/
     public double getIncidentPressure() {
-        IncidentPressure op = new IncidentPressure(units, scaledDistance);
-        return StandardEquation.calculate(op.A, op.B, op.C, op.D, op.E, op.F, op.G, scaledDistance);
+        return StandardEquation.solve(IncidentPressure.getCoefficients(units, scaledDistance), scaledDistance);
     }
 
     public double getReflectedPressure() {
-        ReflectedPressure op = new ReflectedPressure(units, scaledDistance);
-        return StandardEquation.calculate(op.A, op.B, op.C, op.D, op.E, op.F, op.G, scaledDistance);
+        return StandardEquation.solve(ReflectedPressure.getCoefficients(units, scaledDistance), scaledDistance);
+    }
+
+    public double getPositivePhaseDuration() {
+        return Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight ), (1.0 / 3.0)) * StandardEquation.solve(PositivePhaseDuration.getCoefficients(units, scaledDistance), scaledDistance);
+    }
+
+    public double getPositivePhaseImpulse() {
+        return  Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight ), (1.0 / 3.0)) * StandardEquation.solve(IncidentImpulse.getCoefficients(units, scaledDistance), scaledDistance);
+    }
+
+    public double getReflectedImpulse() {
+        return  Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight ), (1.0 / 3.0)) * StandardEquation.solve(ReflectedImpulse.getCoefficients(units, scaledDistance), scaledDistance);
+    }
+
+    public double getDynamicOverpressure() {
+        return StandardEquation.solve(DynamicOverpressure.getCoefficients(units, scaledDistance), scaledDistance);
+    }
+
+    public double getDynamicImpulse() {
+        return 0.0;
     }
 
 }

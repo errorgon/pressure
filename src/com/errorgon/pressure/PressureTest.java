@@ -13,8 +13,8 @@ class PressureTest {
 
     @Test
     public void atmosphereParameterTest() {
-        Pressure pressure = new Pressure(Units.ENGLISH, new TNT(), 100, 75, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
-        pressure.printOutputSection();
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+//        pressure.printOutputSection();
     }
 
     @Test
@@ -44,5 +44,32 @@ class PressureTest {
         res = explosive.getTNTPressureEquivalent(PES.SHIP, 1);
         Assertions.assertEquals(1.0, res);
     }
+
+    @Test
+    public void getPositivePhaseDurationTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        Assertions.assertEquals(14.59291, pressure.getPositivePhaseDuration(), 1e-2);
+    }
+
+    @Test
+    public void getPositivePhaseImpulseTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        Assertions.assertEquals(24.0610, pressure.getPositivePhaseImpulse(), 1e-1);
+    }
+
+    @Test
+    public void getReflectedImpulseTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        Assertions.assertEquals(48.738633, pressure.getReflectedImpulse(), 1e-1);
+    }
+
+    @Test
+    public void getDynamicOverpressureTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        System.out.println("sd: " + pressure.scaledDistance);
+        Assertions.assertEquals(0.45027, pressure.getDynamicOverpressure(), 1e-6);
+    }
+
+
 
 }
