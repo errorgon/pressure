@@ -184,4 +184,10 @@ public class Pressure {
         return pressure * atmoImpulseFactor;
     }
 
+    public double getTimeOfArrival(boolean atSeaLevel) {
+        double pressure = Math.pow(explosive.getTNTPressureEquivalent(pes, netExplosiveWeight), (1.0 / 3.0)) * StandardEquation.solve(TimeOfArrival.getCoefficients(units, scaledPressureDistanceAtSeaLevel), scaledPressureDistanceAtSeaLevel);
+        if (atSeaLevel) return pressure;
+        return pressure * atmoTimeFactor;
+    }
+
 }

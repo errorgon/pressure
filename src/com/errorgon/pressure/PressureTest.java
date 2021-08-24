@@ -94,6 +94,15 @@ class PressureTest {
         Assertions.assertEquals(1.7691399, result, 1e-6);
     }
 
+    @Test
+    public void getTimeOfArrivalTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.getTimeOfArrival(true);
+        Assertions.assertEquals(41.2457491  , result, 1e-6);
+        result = pressure.getTimeOfArrival(false);
+        Assertions.assertEquals(41.7671740, result, 1e-6);
+    }
+
 
 
 }
