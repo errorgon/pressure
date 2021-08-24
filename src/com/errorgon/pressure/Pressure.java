@@ -145,7 +145,7 @@ public class Pressure {
     public double getIncidentPressure(boolean atSeaLevel) {
         double pressure = StandardEquation.solve(IncidentPressure.getCoefficients(units, scaledPressureDistanceAtSeaLevel), scaledPressureDistanceAtSeaLevel);
         if (atSeaLevel) return pressure;
-        else return pressure * atmoPressureFactor;
+        return pressure * atmoPressureFactor;
     }
 
     public double getReflectedPressure(boolean atSeaLevel) {
@@ -154,24 +154,34 @@ public class Pressure {
         return pressure * atmoPressureFactor;
     }
 
-    public double getPositivePhaseDuration() {
-        return Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight ), (1.0 / 3.0)) * StandardEquation.solve(PositivePhaseDuration.getCoefficients(units, scaledDistance), scaledDistance);
+    public double getPositivePhaseDuration(boolean atSeaLevel) {
+        double pressure = Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight ), (1.0 / 3.0)) * StandardEquation.solve(PositivePhaseDuration.getCoefficients(units, scaledImpulseDistanceAtSeaLevel), scaledImpulseDistanceAtSeaLevel);
+        if (atSeaLevel) return pressure;
+        return pressure * atmoTimeFactor;
     }
 
-    public double getPositivePhaseImpulse() {
-        return  Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight ), (1.0 / 3.0)) * StandardEquation.solve(IncidentImpulse.getCoefficients(units, scaledDistance), scaledDistance);
+    public double getPositivePhaseImpulse(boolean atSeaLevel) {
+        double pressure = Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight ), (1.0 / 3.0)) * StandardEquation.solve(IncidentImpulse.getCoefficients(units, scaledImpulseDistanceAtSeaLevel), scaledImpulseDistanceAtSeaLevel);
+        if (atSeaLevel) return pressure;
+        return pressure * atmoImpulseFactor;
     }
 
-    public double getReflectedImpulse() {
-        return  Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0)) * StandardEquation.solve(ReflectedImpulse.getCoefficients(units, scaledDistance), scaledDistance);
+    public double getReflectedImpulse(boolean atSeaLevel) {
+        double pressure = Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0)) * StandardEquation.solve(ReflectedImpulse.getCoefficients(units, scaledImpulseDistanceAtSeaLevel), scaledImpulseDistanceAtSeaLevel);
+        if (atSeaLevel) return pressure;
+        return pressure * atmoImpulseFactor;
     }
 
-    public double getDynamicOverpressure() {
-        return StandardEquation.solve(DynamicOverpressure.getCoefficients(units, scaledPressureDistanceAtSeaLevel), scaledPressureDistanceAtSeaLevel);
+    public double getDynamicOverpressure(boolean atSeaLevel) {
+        double pressure = StandardEquation.solve(DynamicOverpressure.getCoefficients(units, scaledPressureDistanceAtSeaLevel), scaledPressureDistanceAtSeaLevel);
+        if (atSeaLevel) return pressure;
+        return pressure * atmoPressureFactor;
     }
 
-    public double getDynamicImpulse() {
-        return Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0)) * StandardEquation.solve(DynamicImpulse.getCoefficients(units, scaledImpulseDistanceAtSeaLevel), scaledImpulseDistanceAtSeaLevel);
+    public double getDynamicImpulse(boolean atSeaLevel) {
+        double pressure = Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0)) * StandardEquation.solve(DynamicImpulse.getCoefficients(units, scaledImpulseDistanceAtSeaLevel), scaledImpulseDistanceAtSeaLevel);
+        if (atSeaLevel) return pressure;
+        return pressure * atmoImpulseFactor;
     }
 
 }

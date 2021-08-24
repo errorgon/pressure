@@ -52,31 +52,46 @@ class PressureTest {
     @Test
     public void getPositivePhaseDurationTest() {
         Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
-        Assertions.assertEquals(14.59291, pressure.getPositivePhaseDuration(), 1e-2);
+        double result = pressure.getPositivePhaseDuration(true);
+        Assertions.assertEquals(14.5929066, result, 1e-6);
+        result = pressure.getPositivePhaseDuration(false);
+        Assertions.assertEquals(14.7773888, result, 1e-6);
     }
 
     @Test
     public void getPositivePhaseImpulseTest() {
         Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
-        Assertions.assertEquals(24.0610, pressure.getPositivePhaseImpulse(), 1e-1);
+        double result = pressure.getPositivePhaseImpulse(true);
+        Assertions.assertEquals(24.061020, result, 1e-6);
+        result = pressure.getPositivePhaseImpulse(false);
+        Assertions.assertEquals(23.46401058, result, 1e-6);
     }
 
     @Test
     public void getReflectedImpulseTest() {
         Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
-        Assertions.assertEquals(48.738633, pressure.getReflectedImpulse(), 1e-1);
+        double result = pressure.getReflectedImpulse(true);
+        Assertions.assertEquals(48.738633, result, 1e-6);
+        result = pressure.getReflectedImpulse(false);
+        Assertions.assertEquals(47.529314, result, 1e-6);
     }
 
     @Test
     public void getDynamicOverpressureTest() {
         Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
-        Assertions.assertEquals(0.45027, pressure.getDynamicOverpressure(), 1e-3);
+        double result = pressure.getDynamicOverpressure(true);
+        Assertions.assertEquals(0.4502734, result, 1e-6);
+        result = pressure.getDynamicOverpressure(false);
+        Assertions.assertEquals(0.4336193, result, 1e-6);
     }
 
     @Test
     public void getDynamicImpulseTest() {
         Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
-        Assertions.assertEquals(1.814153265, pressure.getDynamicImpulse(), 1e-8);
+        double result = pressure.getDynamicImpulse(true);
+        Assertions.assertEquals(1.814153265, result, 1e-6);
+        result = pressure.getDynamicImpulse(false);
+        Assertions.assertEquals(1.7691399, result, 1e-6);
     }
 
 
