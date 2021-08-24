@@ -14,6 +14,7 @@ public class PositivePhaseDuration {
     private static double E = 0;
     private static double F = 0;
     private static double G = 0;
+    private static double H = 0;
 
     public static double [] getCoefficients(Units units, double scaledDistance) {
         if (units.equals(Units.ENGLISH)) {
@@ -22,7 +23,7 @@ public class PositivePhaseDuration {
             setMetricCoefficients(scaledDistance);
         }
 
-        return new double[]{A, B, C, D, E, F, G};
+        return new double[]{A, B, C, D, E, F, G, H};
     }
 
     private PositivePhaseDuration() {
@@ -40,6 +41,7 @@ public class PositivePhaseDuration {
             E = -2.86846;
             F = -0.60800;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 2.80) {
             A = 0.55250;
             B = 2.32380;
@@ -48,6 +50,7 @@ public class PositivePhaseDuration {
             E = -4.24959;
             F = 0.88170;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 40) {
             A = -1.91410;
             B = 5.86454;
@@ -56,6 +59,7 @@ public class PositivePhaseDuration {
             E = -0.34340;
             F = 0.02624;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 198.5) {
             A = 0.66760;
             B = 0.46860;
@@ -64,6 +68,7 @@ public class PositivePhaseDuration {
             E = 0.00000;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else {
             throw new OutOfRangeException();
         }
@@ -81,6 +86,7 @@ public class PositivePhaseDuration {
             E = -0.05773;
             F = -0.608;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 7.0) {
             A = -18.7701;
             B = 55.0513;
@@ -89,6 +95,7 @@ public class PositivePhaseDuration {
             E = -8.3256;
             F = 0.8817;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 100) {
             A = -13.0597;
             B = 19.7806;
@@ -97,6 +104,7 @@ public class PositivePhaseDuration {
             E = -0.4647;
             F = 0.02624;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 500) {
             A = -0.044686;
             B = 0.51213;
@@ -105,6 +113,7 @@ public class PositivePhaseDuration {
             E = 0.00000;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else {
             throw new OutOfRangeException();
         }

@@ -15,6 +15,7 @@ public class ReflectedImpulse {
     private static double E = 0;
     private static double F = 0;
     private static double G = 0;
+    private static double H = 0;
 
     public static double [] getCoefficients(Units units, double scaledDistance) {
         if (units.equals(Units.ENGLISH)) {
@@ -23,7 +24,7 @@ public class ReflectedImpulse {
             setMetricCoefficients(scaledDistance);
         }
 
-        return new double[]{A, B, C, D, E, F, G};
+        return new double[]{A, B, C, D, E, F, G, H};
     }
 
     private ReflectedImpulse() {
@@ -42,6 +43,7 @@ public class ReflectedImpulse {
             E = 0.00000;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else {
             throw new OutOfRangeException();
         }
@@ -58,6 +60,7 @@ public class ReflectedImpulse {
             E = 0.00000;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else {
             throw new OutOfRangeException();
         }

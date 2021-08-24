@@ -15,15 +15,16 @@ public class ReflectedPressure {
     private static double E = 0;
     private static double F = 0;
     private static double G = 0;
+    private static double H = 0;
 
-    public static double [] getCoefficients(Units units, double scaledDistance) {
+    public static double []  getCoefficients(Units units, double scaledDistance) {
         if (units.equals(Units.ENGLISH)) {
             setEnglishCoefficients(scaledDistance);
         } else if (units.equals(Units.METRIC)) {
             setMetricCoefficients(scaledDistance);
         }
 
-        return new double[]{A, B, C, D, E, F, G};
+        return new double[]{A, B, C, D, E, F, G, H};
     }
 
     private ReflectedPressure() {
@@ -42,6 +43,7 @@ public class ReflectedPressure {
             E = 0.15765;
             F = 0.00414;
             G = -0.01180;
+            H = 0.00000;
         } else if (scaledDistance < 40) {
             A = 8.94402;
             B = -2.14524;
@@ -50,6 +52,7 @@ public class ReflectedPressure {
             E = -0.68439;
             F = 0.11795;
             G = -0.01180;
+            H = 0.00000;
         } else {
             throw new OutOfRangeException();
         }
@@ -66,6 +69,7 @@ public class ReflectedPressure {
             E = -0.01280;
             F = 0.06960;
             G = -0.01180;
+            H = 0.00000;
         } else if (scaledDistance < 100) {
             A = 5.15150;
             B = 9.15826;
@@ -73,7 +77,8 @@ public class ReflectedPressure {
             D = 5.56754;
             E = -1.33455;
             F = 0.16333;
-            G = -0.00818;
+            G = -0.008181;
+            H = 0.00000;
         } else {
             throw new OutOfRangeException();
         }

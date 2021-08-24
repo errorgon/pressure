@@ -13,6 +13,7 @@ public class IncidentPressure {
     private static double E = 0;
     private static double F = 0;
     private static double G = 0;
+    private static double H = 0;
 
     public static double [] getCoefficients(Units units, double scaledDistance) {
         if (units.equals(Units.ENGLISH)) {
@@ -21,7 +22,7 @@ public class IncidentPressure {
             setMetricCoefficients(scaledDistance);
         }
 
-        return new double[]{A, B, C, D, E, F, G};
+        return new double[]{A, B, C, D, E, F, G, H};
     }
 
     private IncidentPressure() {
@@ -40,6 +41,7 @@ public class IncidentPressure {
             E = 0.06850;
             F = 0.0;
             G = 0.0;
+            H = 0.0;
         } else if (scaledDistance < 23.8) {
             A = 7.59345;
             B = -3.05133;
@@ -48,6 +50,7 @@ public class IncidentPressure {
             E = -0.01270;
             F = 0.0;
             G = 0.0;
+            H = 0.0;
         } else if (scaledDistance < 198.5) {
             A = 6.05360;
             B = -1.40660;
@@ -56,6 +59,7 @@ public class IncidentPressure {
             E = 0.0;
             F = 0.0;
             G = 0.0;
+            H = 0.0;
         } else {
             throw new OutOfRangeException();
         }
@@ -72,6 +76,7 @@ public class IncidentPressure {
             E = 0.06850;
             F = 0.0;
             G = 0.0;
+            H = 0.0;
         } else if (scaledDistance < 60) {
             A = 8.80350;
             B = -3.70010;
@@ -80,6 +85,7 @@ public class IncidentPressure {
             E = -0.01270;
             F = 0.0;
             G = 0.0;
+            H = 0.0;
         } else if (scaledDistance < 500) {
             A = 5.42330;
             B = -1.40660;
@@ -88,6 +94,7 @@ public class IncidentPressure {
             E = 0.0;
             F = 0.0;
             G = 0.0;
+            H = 0.0;
         } else {
             throw new OutOfRangeException();
         }

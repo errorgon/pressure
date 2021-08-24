@@ -15,6 +15,7 @@ public class IncidentImpulse {
     private static double E = 0;
     private static double F = 0;
     private static double G = 0;
+    private static double H = 0;
 
 
     public static double [] getCoefficients(Units units, double scaledDistance) {
@@ -24,7 +25,7 @@ public class IncidentImpulse {
             setMetricCoefficients(scaledDistance);
         }
 
-        return new double[]{A, B, C, D, E, F, G};
+        return new double[]{A, B, C, D, E, F, G, H};
     }
 
 
@@ -43,6 +44,7 @@ public class IncidentImpulse {
             E = -0.08700;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 2.38) {
             A = 5.46527;
             B = -0.30760;
@@ -51,6 +53,7 @@ public class IncidentImpulse {
             E = -0.43200;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 33.7) {
             A = 5.27482;
             B = -0.46744;
@@ -59,6 +62,7 @@ public class IncidentImpulse {
             E = -0.00554;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 396.7) {
             A = 5.98260;
             B = -1.06200;
@@ -67,6 +71,7 @@ public class IncidentImpulse {
             E = 0.00000;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else {
             throw new OutOfRangeException();
         }
@@ -84,6 +89,7 @@ public class IncidentImpulse {
             E = -0.08700;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 6.0) {
             A = 0.91100;
             B = 7.26000;
@@ -92,6 +98,7 @@ public class IncidentImpulse {
             E = -0.43200;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 85) {
             A = 3.24840;
             B = 0.16330;
@@ -100,6 +107,7 @@ public class IncidentImpulse {
             E = -0.00554;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else if (scaledDistance < 1000) {
             A = 4.77020;
             B = -1.06200;
@@ -108,6 +116,7 @@ public class IncidentImpulse {
             E = 0.00000;
             F = 0.00000;
             G = 0.00000;
+            H = 0.00000;
         } else {
             throw new OutOfRangeException();
         }

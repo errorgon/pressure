@@ -18,20 +18,6 @@ class PressureTest {
     }
 
     @Test
-    public void incidentPressurePSITest() {
-        Pressure pressure = new Pressure(100, 100);
-        double result = pressure.getIncidentPressure();
-        Assertions.assertEquals(2.6912489, result, 1e-6);
-    }
-
-    @Test
-    public void reflectedPressurePSITest() {
-        Pressure pressure = new Pressure(200, 100);
-        double result = pressure.getReflectedPressure();
-        Assertions.assertEquals(8.35734, result, 1e-2);
-    }
-
-    @Test
     public void tntEquivalentTest() {
         Pressure pressure = new Pressure(10, 100);
         Explosive explosive = new Tritonal();
@@ -43,6 +29,24 @@ class PressureTest {
         Assertions.assertEquals(1.07, res);
         res = explosive.getTNTPressureEquivalent(PES.SHIP, 1);
         Assertions.assertEquals(1.0, res);
+    }
+
+    @Test
+    public void incidentPressurePSITest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.getIncidentPressure(true);
+        Assertions.assertEquals(4.38984059, result, 1e-6);
+        result = pressure.getIncidentPressure(false);
+        Assertions.assertEquals(4.227475106, result, 1e-6);
+    }
+
+    @Test
+    public void reflectedPressurePSITest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.getReflectedPressure(true);
+        Assertions.assertEquals(9.801187, result, 1e-6);
+        result = pressure.getReflectedPressure(false);
+        Assertions.assertEquals(9.43867367, result, 1e-6);
     }
 
     @Test
@@ -66,8 +70,13 @@ class PressureTest {
     @Test
     public void getDynamicOverpressureTest() {
         Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
-        System.out.println("sd: " + pressure.scaledDistance);
-        Assertions.assertEquals(0.45027, pressure.getDynamicOverpressure(), 1e-6);
+        Assertions.assertEquals(0.45027, pressure.getDynamicOverpressure(), 1e-3);
+    }
+
+    @Test
+    public void getDynamicImpulseTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        Assertions.assertEquals(1.814153265, pressure.getDynamicImpulse(), 1e-8);
     }
 
 
