@@ -4,7 +4,6 @@ import com.errorgon.pressure.enums.AtmosphericScalingBasis;
 import com.errorgon.pressure.enums.PES;
 import com.errorgon.pressure.enums.Units;
 import com.errorgon.pressure.explosives.Explosive;
-import com.errorgon.pressure.explosives.TNT;
 import com.errorgon.pressure.explosives.Tritonal;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -95,6 +94,15 @@ class PressureTest {
     }
 
     @Test
+    public void distanceGivenDynamicImpulseTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.distanceAtDynamicImpulse(20.0, true);
+        Assertions.assertEquals(29.17469597, result, 1e-6);
+        result = pressure.distanceAtDynamicImpulse(20.0, false);
+        Assertions.assertEquals(28.901116028, result, 1e-6);
+    }
+
+    @Test
     public void getTimeOfArrivalTest() {
         Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
         double result = pressure.getTimeOfArrival(true);
@@ -102,7 +110,5 @@ class PressureTest {
         result = pressure.getTimeOfArrival(false);
         Assertions.assertEquals(41.7671740, result, 1e-6);
     }
-
-
 
 }

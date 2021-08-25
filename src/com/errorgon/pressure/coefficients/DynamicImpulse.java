@@ -2,6 +2,8 @@ package com.errorgon.pressure.coefficients;
 
 import com.errorgon.pressure.enums.Units;
 import com.errorgon.pressure.exceptions.OutOfRangeException;
+import com.errorgon.pressure.exceptions.OutOfRangeHighException;
+import com.errorgon.pressure.exceptions.OutOfRangeLowException;
 
 
 // Table 2-10
@@ -34,7 +36,7 @@ public class DynamicImpulse {
 
     private static void setMetricCoefficients(double scaledDistance) {
         if (scaledDistance < 0.2) {
-            throw new OutOfRangeException();
+            throw new OutOfRangeLowException();
         } else if (scaledDistance < 2.4) {
             A = 5.22050;
             B = -2.22740;
@@ -54,13 +56,13 @@ public class DynamicImpulse {
             G = -0.07877;
             H = 0.00000;
         } else {
-            throw new OutOfRangeException();
+            throw new OutOfRangeHighException();
         }
     }
 
     private static void setEnglishCoefficients(double scaledDistance) {
         if (scaledDistance < 0.5) {
-            throw new OutOfRangeException();
+            throw new OutOfRangeLowException();
         } else if (scaledDistance < 6) {
             A = 5.02669;
             B = -1.49770;
@@ -80,7 +82,7 @@ public class DynamicImpulse {
             G = -0.0787675;
             H = 0.00000;
         } else {
-            throw new OutOfRangeException();
+            throw new OutOfRangeHighException();
         }
     }
 
