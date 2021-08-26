@@ -94,7 +94,7 @@ class PressureTest {
     }
 
     @Test
-    public void distanceGivenDynamicImpulseTest() {
+    public void distanceAtDynamicImpulseTest() {
         Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
         double result = pressure.distanceAtDynamicImpulse(20.0, true);
         Assertions.assertEquals(29.17469597, result, 1e-6);
@@ -109,6 +109,15 @@ class PressureTest {
         Assertions.assertEquals(41.2457491  , result, 1e-6);
         result = pressure.getTimeOfArrival(false);
         Assertions.assertEquals(41.7671740, result, 1e-6);
+    }
+
+    @Test
+    public void distanceAtTimeOfArrivalTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.distanceAtTimeOfArrival(10.0, true);
+        Assertions.assertEquals(29.17469597, result, 1e-6);
+        result = pressure.distanceAtTimeOfArrival(10.0, false);
+        Assertions.assertEquals(28.901116028, result, 1e-6);
     }
 
 }

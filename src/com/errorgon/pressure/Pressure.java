@@ -150,7 +150,7 @@ public class Pressure {
 
 
     /***** Coefficient Methods *****/
-    public double getIncidentPressure(boolean atSeaLevel) {
+    public double getIncidentPressure(boolean atSeaLevel) throws OutOfRangeException {
         double pressure = StandardEquation.solve(IncidentPressure.getCoefficients(units, scaledPressureDistanceAtSeaLevel), scaledPressureDistanceAtSeaLevel);
         if (atSeaLevel) return pressure;
         return pressure * atmoPressureFactor;
@@ -186,19 +186,13 @@ public class Pressure {
         return pressure * atmoPressureFactor;
     }
 
-    public double getDynamicImpulse(boolean atSeaLevel) {
-        double pressure = Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0)) * StandardEquation.solve(DynamicImpulse.getCoefficients(units, scaledImpulseDistanceAtSeaLevel), scaledImpulseDistanceAtSeaLevel);
-        if (atSeaLevel) return pressure;
-        return pressure * atmoImpulseFactor;
-    }
-
     public double getTimeOfArrival(boolean atSeaLevel) {
         double pressure = Math.pow(explosive.getTNTPressureEquivalent(pes, netExplosiveWeight), (1.0 / 3.0)) * StandardEquation.solve(TimeOfArrival.getCoefficients(units, scaledPressureDistanceAtSeaLevel), scaledPressureDistanceAtSeaLevel);
         if (atSeaLevel) return pressure;
         return pressure * atmoTimeFactor;
     }
 
-    public double distanceAtDynamicImpulse(double dynamicImpulse, boolean atSeaLevel) {
+    public double distanceAtTimeOfArrival(double target, boolean atSeaLevel) {
         int direction;
         int lastDirection = 0;
         double stepsize = 10.0;
@@ -207,19 +201,66 @@ public class Pressure {
         distance = 100.0;
         int run = 0;
 
-        // equivalent distance at sea level
-        distanceAtSeaLevel = distance / atmoDistanceFactor;
+        while (Math.abs(target - estimate) > error) {
+            distanceAtSeaLevel = distance / atmoDistanceFactor;
+            scaledPressureDistanceAtSeaLevel = distanceAtSeaLevel / Math.pow(explosive.getTNTPressureEquivalent(pes, netExplosiveWeight), (1.0 / 3.0));
 
-        // Scaled distance at sea level
-        scaledImpulseDistanceAtSeaLevel = distanceAtSeaLevel / Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0));
-//        boolean inRange = DynamicImpulse.checkInRange(units, scaledDistance);
+            System.out.println(" ");
+            System.out.println("Distance: " + distance);
 
+            estimate = getTimeOfArrival(atSeaLevel);
 
-        while (Math.abs(dynamicImpulse - estimate) > error) {
+            System.out.println("Estimate: " + estimate);
+
+            if (estimate < target) {  // As distance increases, TOA increase
+                distance += stepsize;
+                direction = 1;
+            } else {
+                distance -= stepsize;
+                direction = -1;
+            }
+            if (direction != lastDirection) {
+                stepsize /= 2.0;
+            }
+            lastDirection = direction;
+            run++;
+            if (run == runLimit) throw new PressureNotFoundException();
+        }
+
+        double solution = distance;
+
+        // Reset the original distance parameter
+        distance = keep;
+
+        // Reset the explosive parameters to the original object fields.
+        setExplosiveParameters();
+
+        return solution;
+
+    }
+
+    public double getDynamicImpulse(boolean atSeaLevel) {
+        double pressure = Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0)) * StandardEquation.solve(DynamicImpulse.getCoefficients(units, scaledImpulseDistanceAtSeaLevel), scaledImpulseDistanceAtSeaLevel);
+        if (atSeaLevel) return pressure;
+        return pressure * atmoImpulseFactor;
+    }
+
+    public double distanceAtDynamicImpulse(double target, boolean atSeaLevel) {
+        int direction;
+        int lastDirection = 0;
+        double stepsize = 10.0;
+        double estimate = 0.0;
+        double keep = distance;
+        distance = 100.0;
+        int run = 0;
+
+        while (Math.abs(target - estimate) > error) {
             distanceAtSeaLevel = distance / atmoDistanceFactor;
             scaledImpulseDistanceAtSeaLevel = distanceAtSeaLevel / Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0));
 
-            if (estimate > dynamicImpulse) {
+            estimate = getDynamicImpulse(atSeaLevel);
+
+            if (estimate < target) {
                 distance += stepsize;
                 direction = 1;
             } else {
