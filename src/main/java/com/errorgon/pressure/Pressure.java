@@ -12,6 +12,7 @@ import com.errorgon.pressure.exceptions.OutOfRangeLowException;
 import com.errorgon.pressure.exceptions.PressureNotFoundException;
 import com.errorgon.pressure.explosives.Explosive;
 import com.errorgon.pressure.explosives.TNT;
+import org.apache.commons.math3.distribution.NormalDistribution;
 
 public class Pressure {
 
@@ -43,6 +44,10 @@ public class Pressure {
     // For goal seeking
     double error = 0.00000001;
     int runLimit = 100;
+
+    enum GoalSeek {
+        INCIDENT, REFLECTED_PRESSURE, POSTIVE_DURATION, POSTIVE_IMPULSE, REFLECTED_IMPULSE, DYNAMIC_OVERPRESSURE, DYNAMIC_IMPULSE, TIME_OF_ARRIVAL;
+    }
 
 
     public Pressure(Explosive explosive) {
@@ -134,21 +139,6 @@ public class Pressure {
         scaledImpulseDistanceAtSeaLevel = distanceAtSeaLevel / Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0));
     }
 
-
-    void printOutputSection() {
-        System.out.println("Tnt Eq - Pressure: " + explosive.getTNTPressureEquivalent(pes, netExplosiveWeight));
-        System.out.println("Tnt Eq - Impulse: " + explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight));
-        System.out.println("Hemi Weight Pressure: " + getHemiWeightPressure());
-        System.out.println("Hemi Weight Impulse: " + getHemiWeightImpulse());
-
-        System.out.println("atmoPressure: " + atmoPressure);
-        System.out.println("atmoPressureFactor: " + atmoPressureFactor);
-        System.out.println("atmoDistanceFactor: " + atmoDistanceFactor);
-        System.out.println("atmoTimeFactor: " + atmoTimeFactor);
-        System.out.println("atmoImpulseFactor: " + atmoImpulseFactor);
-    }
-
-
     /***** Coefficient Methods *****/
     public double getIncidentPressure(boolean atSeaLevel) throws OutOfRangeException {
         double pressure = StandardEquation.solve(IncidentPressure.getCoefficients(units, scaledPressureDistanceAtSeaLevel), scaledPressureDistanceAtSeaLevel);
@@ -192,7 +182,63 @@ public class Pressure {
         return pressure * atmoTimeFactor;
     }
 
+    public double getDynamicImpulse(boolean atSeaLevel) {
+        double pressure = Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0)) * StandardEquation.solve(DynamicImpulse.getCoefficients(units, scaledImpulseDistanceAtSeaLevel), scaledImpulseDistanceAtSeaLevel);
+        if (atSeaLevel) return pressure;
+        return pressure * atmoImpulseFactor;
+    }
+
+    /***** Eardrum Rupture Methods *****/
+    public double[] getChanceOfEardrumRupture() {
+        NormalDistribution nd = new NormalDistribution();
+
+        double pressure = StandardEquation.solve(EardrumRupture.getCoefficients(units, scaledPressureDistanceAtSeaLevel), getIncidentPressure(true));
+        double minor = nd.cumulativeProbability(((13.051 - 3.3 * Math.log(pressure)) - 5));
+        double moderate = nd.cumulativeProbability(((12.636 - 3.5 * Math.log(pressure)) - 5));
+        double major =nd.cumulativeProbability((12.876 - 4.3 * Math.log(pressure)) - 5);
+
+
+        return new double[]{minor, moderate, major};
+
+    }
+
+
+
+
+    /***** Goalseek Methods *****/
+    public double distanceAtIncidentPressure(double target, boolean atSeaLevel) {
+        return goalSeek(GoalSeek.INCIDENT, target, atSeaLevel);
+    }
+
+    public double distanceAtReflectedPressure(double target, boolean atSeaLevel) {
+        return goalSeek(GoalSeek.REFLECTED_PRESSURE, target, atSeaLevel);
+    }
+
+    public double distanceAtPositivePhaseDuration(double target, boolean atSeaLevel) {
+        return goalSeek(GoalSeek.POSTIVE_DURATION, target, atSeaLevel);
+    }
+
+    public double distanceAtPositivePhaseImpulse(double target, boolean atSeaLevel) {
+        return goalSeek(GoalSeek.POSTIVE_IMPULSE, target, atSeaLevel);
+    }
+
+    public double distanceAtReflectedImpulse(double target, boolean atSeaLevel) {
+        return goalSeek(GoalSeek.REFLECTED_IMPULSE, target, atSeaLevel);
+    }
+
     public double distanceAtTimeOfArrival(double target, boolean atSeaLevel) {
+        return goalSeek(GoalSeek.TIME_OF_ARRIVAL, target, atSeaLevel);
+    }
+
+    public double distanceAtDynamicOverpressure(double target, boolean atSeaLevel) {
+        return goalSeek(GoalSeek.DYNAMIC_OVERPRESSURE, target, atSeaLevel);
+    }
+
+    public double distanceAtDynamicImpulse(double target, boolean atSeaLevel) {
+        return goalSeek(GoalSeek.DYNAMIC_IMPULSE, target, atSeaLevel);
+    }
+
+    private double goalSeek(GoalSeek goalSeek, double target, boolean atSeaLevel) {
         int direction;
         int lastDirection = 0;
         double stepsize = 10.0;
@@ -204,69 +250,53 @@ public class Pressure {
         while (Math.abs(target - estimate) > error) {
             distanceAtSeaLevel = distance / atmoDistanceFactor;
             scaledPressureDistanceAtSeaLevel = distanceAtSeaLevel / Math.pow(explosive.getTNTPressureEquivalent(pes, netExplosiveWeight), (1.0 / 3.0));
-
-            System.out.println(" ");
-            System.out.println("Distance: " + distance);
-
-            estimate = getTimeOfArrival(atSeaLevel);
-
-            System.out.println("Estimate: " + estimate);
-
-            if (estimate < target) {  // As distance increases, TOA increase
-                distance += stepsize;
-                direction = 1;
-            } else {
-                distance -= stepsize;
-                direction = -1;
-            }
-            if (direction != lastDirection) {
-                stepsize /= 2.0;
-            }
-            lastDirection = direction;
-            run++;
-            if (run == runLimit) throw new PressureNotFoundException();
-        }
-
-        double solution = distance;
-
-        // Reset the original distance parameter
-        distance = keep;
-
-        // Reset the explosive parameters to the original object fields.
-        setExplosiveParameters();
-
-        return solution;
-
-    }
-
-    public double getDynamicImpulse(boolean atSeaLevel) {
-        double pressure = Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0)) * StandardEquation.solve(DynamicImpulse.getCoefficients(units, scaledImpulseDistanceAtSeaLevel), scaledImpulseDistanceAtSeaLevel);
-        if (atSeaLevel) return pressure;
-        return pressure * atmoImpulseFactor;
-    }
-
-    public double distanceAtDynamicImpulse(double target, boolean atSeaLevel) {
-        int direction;
-        int lastDirection = 0;
-        double stepsize = 10.0;
-        double estimate = 0.0;
-        double keep = distance;
-        distance = 100.0;
-        int run = 0;
-
-        while (Math.abs(target - estimate) > error) {
-            distanceAtSeaLevel = distance / atmoDistanceFactor;
             scaledImpulseDistanceAtSeaLevel = distanceAtSeaLevel / Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0));
 
-            estimate = getDynamicImpulse(atSeaLevel);
-
-            if (estimate < target) {
-                distance += stepsize;
-                direction = 1;
-            } else {
-                distance -= stepsize;
-                direction = -1;
+            switch (goalSeek) {
+                case DYNAMIC_IMPULSE:
+                    estimate = getDynamicImpulse(atSeaLevel);
+                    break;
+                case INCIDENT:
+                    estimate = getIncidentPressure(atSeaLevel);
+                    break;
+                case REFLECTED_PRESSURE:
+                    estimate = getReflectedPressure(atSeaLevel);
+                    break;
+                case POSTIVE_DURATION:
+                    estimate = getPositivePhaseDuration(atSeaLevel);
+                    break;
+                case POSTIVE_IMPULSE:
+                    estimate = getPositivePhaseImpulse(atSeaLevel);
+                    break;
+                case REFLECTED_IMPULSE:
+                    estimate = getReflectedImpulse(atSeaLevel);
+                    break;
+                case DYNAMIC_OVERPRESSURE:
+                    estimate = getDynamicOverpressure(atSeaLevel);
+                    break;
+                case TIME_OF_ARRIVAL:
+                    estimate = getTimeOfArrival(atSeaLevel);
+                    break;
             }
+
+            if (goalSeek.equals(GoalSeek.TIME_OF_ARRIVAL) || goalSeek.equals(GoalSeek.POSTIVE_DURATION)) {
+                if (estimate < target) {
+                    distance += stepsize;
+                    direction = 1;
+                } else {
+                    distance -= stepsize;
+                    direction = -1;
+                }
+            } else {
+                if (estimate > target) {
+                    distance += stepsize;
+                    direction = 1;
+                } else {
+                    distance -= stepsize;
+                    direction = -1;
+                }
+            }
+
             if (direction != lastDirection) {
                 stepsize /= 2.0;
             }
@@ -284,5 +314,7 @@ public class Pressure {
 
         return solution;
     }
+
+
 
 }

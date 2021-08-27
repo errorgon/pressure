@@ -94,15 +94,6 @@ class PressureTest {
     }
 
     @Test
-    public void distanceAtDynamicImpulseTest() {
-        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
-        double result = pressure.distanceAtDynamicImpulse(20.0, true);
-        Assertions.assertEquals(29.17469597, result, 1e-6);
-        result = pressure.distanceAtDynamicImpulse(20.0, false);
-        Assertions.assertEquals(28.901116028, result, 1e-6);
-    }
-
-    @Test
     public void getTimeOfArrivalTest() {
         Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
         double result = pressure.getTimeOfArrival(true);
@@ -112,12 +103,85 @@ class PressureTest {
     }
 
     @Test
+    public void distanceAtIncidentPressureTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.distanceAtIncidentPressure(10.0, true);
+        Assertions.assertEquals(46.96487758308649, result, 1e-6);
+        result = pressure.distanceAtIncidentPressure(10.0, false);
+        Assertions.assertEquals(46.05746313929558, result, 1e-6);
+    }
+
+    @Test
+    public void distanceAtReflectedPressureTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.distanceAtReflectedPressure(10.0, true);
+        Assertions.assertEquals(74.16050434112549, result, 1e-6);
+        result = pressure.distanceAtReflectedPressure(10.0, false);
+        Assertions.assertEquals(72.62337639927864, result, 1e-6);
+    }
+
+    @Test
+    public void distanceAtPositivePhaseDurationTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.distanceAtPositivePhaseDuration(20, true);
+        Assertions.assertEquals(199.90147829055786, result, 1e-6);
+        result = pressure.distanceAtPositivePhaseDuration(20, false);
+        Assertions.assertEquals(191.74107670783997, result, 1e-6);
+    }
+
+    @Test
+    public void distanceAtPositivePhaseImpulseTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.distanceAtPositivePhaseImpulse(10.0, true);
+        Assertions.assertEquals(188.4093788266182, result, 1e-6);
+        result = pressure.distanceAtPositivePhaseImpulse(10.0, false);
+        Assertions.assertEquals(183.5912275314331, result, 1e-6);
+    }
+
+    @Test
+    public void distanceAtReflectedImpulseTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.distanceAtReflectedImpulse(10.0, true);
+        Assertions.assertEquals(336.61971539258957, result, 1e-6);
+        result = pressure.distanceAtReflectedImpulse(10.0, false);
+        Assertions.assertEquals(328.64198863506317, result, 1e-6);
+    }
+
+    @Test
+    public void distanceAtDynamicOverpressureTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.distanceAtDynamicOverpressure(10.0, true);
+        Assertions.assertEquals(32.13211052119732, result, 1e-6);
+        result = pressure.distanceAtDynamicOverpressure(10.0, false);
+        Assertions.assertEquals(31.81903620250523, result, 1e-6);
+    }
+
+    @Test
     public void distanceAtTimeOfArrivalTest() {
         Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
         double result = pressure.distanceAtTimeOfArrival(10.0, true);
-        Assertions.assertEquals(29.17469597, result, 1e-6);
+        Assertions.assertEquals(31.4429859, result, 1e-6);
         result = pressure.distanceAtTimeOfArrival(10.0, false);
+        Assertions.assertEquals(31.22566442, result, 1e-6);
+    }
+
+    @Test
+    public void distanceAtDynamicImpulseTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.distanceAtDynamicImpulse(20.0, true);
+        Assertions.assertEquals(29.17469597, result, 1e-6);
+        result = pressure.distanceAtDynamicImpulse(20.0, false);
         Assertions.assertEquals(28.901116028, result, 1e-6);
     }
+
+    @Test
+    public void getChanceOfEardrumRuptureTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result[] = pressure.getChanceOfEardrumRupture();
+        Assertions.assertEquals(0.150788210, result[0], 1e-6);  // minor
+        Assertions.assertEquals(0.022825407, result[1], 1e-6);  // moderate
+        Assertions.assertEquals(0.000037349, result[2], 1e-6);  // major
+    }
+
 
 }
