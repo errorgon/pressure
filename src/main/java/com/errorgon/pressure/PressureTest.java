@@ -183,5 +183,11 @@ class PressureTest {
         Assertions.assertEquals(0.000037349, result[2], 1e-6);  // major
     }
 
+    @Test
+    public void getChanceOfLungRuptureTest() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.getChanceOfLungRupture();
+    }
+
 
 }

@@ -188,7 +188,7 @@ public class Pressure {
         return pressure * atmoImpulseFactor;
     }
 
-    /***** Eardrum Rupture Methods *****/
+    /***** Eardrum & Lung Rupture Methods *****/
     public double[] getChanceOfEardrumRupture() {
         NormalDistribution nd = new NormalDistribution();
 
@@ -197,12 +197,39 @@ public class Pressure {
         double moderate = nd.cumulativeProbability(((12.636 - 3.5 * Math.log(pressure)) - 5));
         double major =nd.cumulativeProbability((12.876 - 4.3 * Math.log(pressure)) - 5);
 
-
         return new double[]{minor, moderate, major};
-
     }
 
+    public double getChanceOfLungRupture() {
+        NormalDistribution nd = new NormalDistribution();
 
+        double dynamicOverpressure = 0.0;
+        double incidentOverpressure = 0.0;
+        double pScaled = 0.0;
+        double iScaled = 0.0;
+
+        try {
+            dynamicOverpressure = getDynamicOverpressure(true);
+            incidentOverpressure = getIncidentPressure(true);
+        } catch (OutOfRangeException e) {
+
+        }
+
+        if (dynamicOverpressure == 0.0 || incidentOverpressure == 0.0) {
+            pScaled = 0.0;
+        } else {
+            pScaled = (dynamicOverpressure + incidentOverpressure) * 0.01;
+        }
+
+        iScaled = getPositivePhaseImpulse(true) * 0.001 * 0.7673;
+
+        System.out.println("pScaled: " + pScaled);
+        System.out.println("iScaled: " + iScaled);
+
+
+
+        return 0.0;
+    }
 
 
     /***** Goalseek Methods *****/
