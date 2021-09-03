@@ -12,6 +12,7 @@ import com.errorgon.pressure.exceptions.OutOfRangeLowException;
 import com.errorgon.pressure.exceptions.PressureNotFoundException;
 import com.errorgon.pressure.explosives.Explosive;
 import com.errorgon.pressure.explosives.TNT;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.apache.commons.math3.distribution.NormalDistribution;
 
 public class Pressure {
@@ -216,19 +217,18 @@ public class Pressure {
         }
 
         if (dynamicOverpressure == 0.0 || incidentOverpressure == 0.0) {
-            pScaled = 0.0;
+            pScaled = 0.00001;
         } else {
             pScaled = (dynamicOverpressure + incidentOverpressure) * 0.01;
         }
 
+        System.out.println(getPositivePhaseImpulse(true));
         iScaled = getPositivePhaseImpulse(true) * 0.001 * 0.7673;
 
-        System.out.println("pScaled: " + pScaled);
-        System.out.println("iScaled: " + iScaled);
+        double slr = (0.61 / pScaled) + (0.189 / iScaled);
+        double zlr = -5.74 * Math.log(slr);
 
-
-
-        return 0.0;
+        return nd.cumulativeProbability(zlr);
     }
 
 

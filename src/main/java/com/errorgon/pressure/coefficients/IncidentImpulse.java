@@ -82,7 +82,7 @@ public class IncidentImpulse {
         if (scaledDistance < 0.5) {
             throw new OutOfRangeException();
         } else if (scaledDistance < 2.41) {
-            A = -2.97500;
+            A = 2.97500;
             B = -0.46600;
             C = 0.96300;
             D = 0.03000;

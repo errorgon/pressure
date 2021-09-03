@@ -67,6 +67,15 @@ class PressureTest {
     }
 
     @Test
+    public void getPositivePhaseImpulseTest2() {
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 500, 15, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        double result = pressure.getPositivePhaseImpulse(true);
+        Assertions.assertEquals(167.44713088, result, 1e-6);
+        result = pressure.getPositivePhaseImpulse(false);
+        Assertions.assertEquals(163.292379230, result, 1e-6);
+    }
+
+    @Test
     public void getReflectedImpulseTest() {
         Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
         double result = pressure.getReflectedImpulse(true);
@@ -185,8 +194,9 @@ class PressureTest {
 
     @Test
     public void getChanceOfLungRuptureTest() {
-        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 100, 75, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
+        Pressure pressure = new Pressure(Units.ENGLISH, new Tritonal(), 500, 15, PES.OPEN_STORAGE_STANDARD, 59, AtmosphericScalingBasis.ALTITUDE, 1000);
         double result = pressure.getChanceOfLungRupture();
+        Assertions.assertEquals(0.0079596, result, 1e-6);
     }
 
 
