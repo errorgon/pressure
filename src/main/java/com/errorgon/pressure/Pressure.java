@@ -7,12 +7,9 @@ import com.errorgon.pressure.enums.PES;
 import com.errorgon.pressure.enums.Units;
 import com.errorgon.pressure.equations.StandardEquation;
 import com.errorgon.pressure.exceptions.OutOfRangeException;
-import com.errorgon.pressure.exceptions.OutOfRangeHighException;
-import com.errorgon.pressure.exceptions.OutOfRangeLowException;
 import com.errorgon.pressure.exceptions.PressureNotFoundException;
 import com.errorgon.pressure.explosives.Explosive;
 import com.errorgon.pressure.explosives.TNT;
-import jdk.swing.interop.SwingInterOpUtils;
 import org.apache.commons.math3.distribution.NormalDistribution;
 
 public class Pressure {
@@ -52,26 +49,26 @@ public class Pressure {
 
 
     public Pressure(Explosive explosive) {
-        this(Units.ENGLISH, explosive);
+        this(explosive, Units.ENGLISH);
     }
 
-    public Pressure(Units units, Explosive explosive) {
-        this(units, explosive, 1.0);
+    public Pressure(Explosive explosive, Units units) {
+        this(explosive,units, 1.0);
     }
 
-    public Pressure(Units units, Explosive explosive, double netExplosiveWeight) {
-        this(units, explosive, 1.0, 1.0);
+    public Pressure(Explosive explosive, Units units, double netExplosiveWeight) {
+        this(explosive, units, 1.0, 1.0);
     }
 
     public Pressure(double netExplosiveWeight, double distance) {
-        this(Units.ENGLISH, new TNT(), netExplosiveWeight, distance);
+        this( new TNT(), Units.ENGLISH, netExplosiveWeight, distance);
     }
 
-    public Pressure(Units units, Explosive explosive, double netExplosiveWeight, double distance) {
-        this(units, explosive, netExplosiveWeight, distance, PES.OPEN_STORAGE_STANDARD, 59.0, AtmosphericScalingBasis.ALTITUDE, 0.0);
+    public Pressure(Explosive explosive, Units units, double netExplosiveWeight, double distance) {
+        this(explosive, units, netExplosiveWeight, distance, PES.OPEN_STORAGE_STANDARD, 59.0, AtmosphericScalingBasis.ALTITUDE, 0.0);
     }
 
-    public Pressure(Units units, Explosive explosive, double netExplosiveWeight, double distance, PES pes, double temperature, AtmosphericScalingBasis asb, double atmosphere) {
+    public Pressure(Explosive explosive, Units units, double netExplosiveWeight, double distance, PES pes, double temperature, AtmosphericScalingBasis asb, double atmosphere) {
         this.units = units;
         this.explosive = explosive;
         this.netExplosiveWeight = netExplosiveWeight;
@@ -83,7 +80,6 @@ public class Pressure {
         this.atmosphere = atmosphere;
         setAltitudeParameters(asb, atmosphere);
         setExplosiveParameters();
-
     }
 
     /***** Setters and Getter *****/
@@ -95,7 +91,7 @@ public class Pressure {
         return explosive;
     }
 
-    /***** Helper Methods *****/
+    /***** Private Helper Methods *****/
     // Equation 2-3
     // Z = R/W^(1/3)
     private void setScaledDistance(double distance) {
@@ -103,12 +99,10 @@ public class Pressure {
     }
 
     private double getHemiWeightPressure() {
-
         return 0.0;
     }
 
     private double getHemiWeightImpulse() {
-
         return 0.0;
     }
 
@@ -140,7 +134,7 @@ public class Pressure {
         scaledImpulseDistanceAtSeaLevel = distanceAtSeaLevel / Math.pow(explosive.getTNTImpulseEquivalent(pes, netExplosiveWeight), (1.0 / 3.0));
     }
 
-    /***** Coefficient Methods *****/
+    /***** Public Methods *****/
     public double getIncidentPressure(boolean atSeaLevel) throws OutOfRangeException {
         double pressure = StandardEquation.solve(IncidentPressure.getCoefficients(units, scaledPressureDistanceAtSeaLevel), scaledPressureDistanceAtSeaLevel);
         if (atSeaLevel) return pressure;
