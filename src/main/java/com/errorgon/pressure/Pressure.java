@@ -10,6 +10,7 @@ import com.errorgon.pressure.exceptions.OutOfRangeException;
 import com.errorgon.pressure.exceptions.PressureNotFoundException;
 import com.errorgon.pressure.explosives.Explosive;
 import com.errorgon.pressure.explosives.TNT;
+import com.errorgon.pressure.explosives.Tritonal;
 import org.apache.commons.math3.distribution.NormalDistribution;
 
 public class Pressure {
@@ -47,6 +48,9 @@ public class Pressure {
         INCIDENT, REFLECTED_PRESSURE, POSTIVE_DURATION, POSTIVE_IMPULSE, REFLECTED_IMPULSE, DYNAMIC_OVERPRESSURE, DYNAMIC_IMPULSE, TIME_OF_ARRIVAL;
     }
 
+    public Pressure() {
+        this(new TNT());
+    }
 
     public Pressure(Explosive explosive) {
         this(explosive, Units.ENGLISH);
