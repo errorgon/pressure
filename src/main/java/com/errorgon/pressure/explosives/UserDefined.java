@@ -53,4 +53,11 @@ public class UserDefined implements Explosive{
         return null;
     }
 
+    public static void setEquivPressure(double equivPressure) {
+        UserDefined.equivPressure = equivPressure;
+    }
+
+    public static void setEquivImpulse(double equivImpulse) {
+        UserDefined.equivImpulse = equivImpulse;
+    }
 }
