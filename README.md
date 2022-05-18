@@ -31,7 +31,7 @@ build.gradle (Module):
 
 ```
 dependencies {
-    implementation 'com.github.errorgon:pressure:v1.0.4'
+    implementation 'com.github.errorgon:pressure:v1.0.11'
 }
 ```
 
